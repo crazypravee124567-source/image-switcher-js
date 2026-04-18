@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Image Switcher</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0a;
+      --card: #111111;
+      --border: #222;
+      --accent: #e8c84a;
+      --text: #f5f5f5;
+      --muted: #666;
+      --blue: #1a73e8;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Barlow', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 32px 28px;
+      width: 100%;
+      max-width: 380px;
+      animation: fadeUp 0.4s ease both;
+    }
+
+    /* Header */
+    .top-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .top-label::before {
+      content: '';
+      display: inline-block;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3rem;
+      letter-spacing: 2px;
+      line-height: 1;
+      margin-bottom: 24px;
+    }
+
+    h1 span { color: var(--accent); }
+
+    /* Image frame */
+    .img-frame {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      margin-bottom: 18px;
+      aspect-ratio: 3/4;
+      background: #1a1a1a;
+    }
+
+    #image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      display: block;
+      transition: opacity 0.35s ease;
+    }
+
+    #image.fade { opacity: 0; }
+
+    /* Name overlay */
+    .name-overlay {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 40px 18px 18px;
+      background: linear-gradient(transparent, rgba(0,0,0,0.85));
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+
+    .player-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      letter-spacing: 1.5px;
+      line-height: 1;
+    }
+
+    .player-role {
+      font-size: 0.7rem;
+      font-family: 'DM Mono', monospace;
+      color: #aaa;
+      margin-top: 2px;
+    }
+
+    .player-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.8rem;
+      color: var(--accent);
+      line-height: 1;
+      opacity: 0.85;
+    }
+
+    /* Dots indicator */
+    .dots {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin-bottom: 18px;
+    }
+
+    .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--border);
+      transition: all 0.3s;
+    }
+
+    .dot.active {
+      background: var(--accent);
+      width: 22px;
+      border-radius: 4px;
+    }
+
+    /* Switch button */
+    .btn-switch {
+      width: 100%;
+      background: var(--accent);
+      color: #0a0a0a;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Barlow', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      padding: 14px;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: opacity 0.2s, transform 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .btn-switch:hover  { opacity: 0.88; transform: translateY(-2px); }
+    .btn-switch:active { transform: scale(0.97); }
+
+    .hint {
+      text-align: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--muted);
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+
+  <div class="top-label">image switcher</div>
+
+  <h1>Cricket <span>Legends</span></h1>
+
+  <!-- Image Frame -->
+  <div class="img-frame">
+    <img
+      src="https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=600&q=80"
+      alt="Cricket Player"
+      id="image"
+    />
+    <div class="name-overlay">
+      <div>
+        <div class="player-name" id="playerName">Virat Kohli</div>
+        <div class="player-role" id="playerRole">Right-hand Batsman · India</div>
+      </div>
+      <div class="player-num" id="playerNum">18</div>
+    </div>
+  </div>
+
+  <!-- Dots -->
+  <div class="dots">
+    <div class="dot active" id="dot0"></div>
+    <div class="dot" id="dot1"></div>
+  </div>
+
+  <!-- Button -->
+  <button class="btn-switch" onclick="switchImage()">⇄ Switch Player</button>
+  <p class="hint">// if/else · image.src · DOM</p>
+
+</div>
+
+<script>
+  // ── Your original JS logic ───────────────────────────────────────────
+
+  const images = [
+    {
+      src: "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=600&q=80",
+      name: "Virat Kohli",
+      role: "Right-hand Batsman · India",
+      num: "18"
+    },
+    {
+      src: "https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=600&q=80",
+      name: "Sachin Tendulkar",
+      role: "Right-hand Batsman · India",
+      num: "10"
+    }
+  ];
+
+  let current = 0;
+
+  function switchImage() {
+    const image = document.getElementById("image");
+
+    // fade out
+    image.classList.add("fade");
+
+    setTimeout(() => {
+      // Your original if/else logic — toggle between 0 and 1
+      if (current === 0) {
+        current = 1;
+      } else {
+        current = 0;
+      }
+
+      const player = images[current];
+      image.src = player.src;
+      document.getElementById("playerName").textContent = player.name;
+      document.getElementById("playerRole").textContent = player.role;
+      document.getElementById("playerNum").textContent  = player.num;
+
+      // update dots
+      document.getElementById("dot0").classList.toggle("active", current === 0);
+      document.getElementById("dot1").classList.toggle("active", current === 1);
+
+      // fade in
+      image.classList.remove("fade");
+    }, 350);
+  }
+</script>
+
+</body>
+</html>
